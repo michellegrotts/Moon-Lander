@@ -15,6 +15,7 @@ var step = true;
 var refresh;
 var landerY;
 var dy;
+var impact = [];
 //Set up shapes for drawing.
 function rectangle(xLoc, yLoc, width, height, fill) {
     this.xLoc = xLoc;
@@ -76,6 +77,7 @@ function start() {
     landerY = 1;
     aPressed = false;
     fuel = 100;
+    zeroPoint = 0;
     shapes();
     refresh = setInterval(draw, 40);
 }
@@ -93,7 +95,25 @@ function shapes() {
     
     context.fillStyle = landerObj.fill;
     context.fillRect(landerObj.xLoc, landerY, landerObj.width, landerObj.height);
-}
+    
+    fuelText();
+    
+    landerText();
+};
+
+//Displays the fuel level under the fuel bar
+fuelText = function() {
+    context.font = "10px Times";
+    context.fillStyle = "red";
+    context.fillText(fuel, fuelObj.xLoc, fuelObj.yLoc + fuelObj.height + 10);
+};
+
+//Displays the word "Land" on the lander
+landerText = function() {
+    context.font = "10px Times";
+    context.fillStyle = "red";
+    context.fillText("Land", landerObj.xLoc, landerY + 15);
+};
 
 //Draw the canvas and move the objects
 function draw() {
@@ -103,6 +123,8 @@ function draw() {
     context.clearRect(0, 0, canvas.width, canvas.height);
     
     shapes();
+    
+    fuelText();
     
     listen();
     //Calculate the velocity based on gravity and the last zero velocity point
@@ -123,14 +145,24 @@ function draw() {
     }
     //If lander is on the moon, and the velocity is over 11.2 m/s, stop and lose
     else if (((landerY + landerObj.height) >= moonObj.yLoc) && vel >= 11.2) {
+        //Stop moving
         dy = 0;
+        //Display the final velocity and display the win/lose status with the user
+        context.font = "10px Times";
+        context.fillStyle = "blue";
+        context.fillText("Impact velocity: " + vel, (canvas.width / 2) - 75, moonObj.yLoc + 20);
         confirm("You Lose!");
         //document.location.reload(true);
         clearInterval(refresh);
     }
     //If lander is on the moon and velocity is under 11.2 m/s, stop and win
     else if ((landerY + landerObj.height) >= moonObj.yLoc) {
+        //Stop moving
         dy = 0;
+        //Display the final velocity and confirm the win/lose status with the user
+        context.font = "10px Times";
+        context.fillStyle = "blue";
+        context.fillText("Impact velocity: " + vel, (canvas.width / 2) - 75, moonObj.yLoc + 20);
         confirm("You landed safely! You win!");
         //document.location.reload(true);
         clearInterval(refresh);
@@ -142,9 +174,3 @@ function draw() {
     //Move the lander
     landerY += dy;
 };
-
-
-/*text = function() {
-    context.font = "20px Times";
-    context.fillText("World, say Hello!", 25, 30);
-};*/
