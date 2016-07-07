@@ -8,6 +8,7 @@ var canvas = document.getElementById("moonCanvas");
 var context = canvas.getContext("2d");
 var aPressed = false;
 var fuel = 100;
+// Velocity var
 var vel;
 var grav = 1.62;
 var zeroPoint = 0;
